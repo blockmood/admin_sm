@@ -4,6 +4,7 @@ const Model = {
   namespace: 'cate',
   state: {
     cateList: [],
+    total: 0,
   },
   effects: {
     *fetchCateList({ payload }, { call, put }) {
@@ -16,7 +17,7 @@ const Model = {
   },
   reducers: {
     changeCateList(state, { payload }) {
-      return { ...state, cateList: payload.data };
+      return { ...state, cateList: payload.data, total: payload.total };
     },
   },
 };

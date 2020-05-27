@@ -15,7 +15,7 @@ const wrapperLayout = {
 };
 
 const CateList = (Props) => {
-  const [page, setPage] = useState('1');
+  const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
   const [updateData, setUpdateData] = useState({});
   const [form] = Form.useForm();
@@ -26,14 +26,14 @@ const CateList = (Props) => {
 
   useEffect(() => {
     getList();
-  }, []);
+  }, [page]);
 
   const getList = () => {
     dispatch({
       type: 'cate/fetchCateList',
       payload: {
         page,
-        pageSize: '10',
+        pageSize: 10,
       },
     });
   };
@@ -43,7 +43,6 @@ const CateList = (Props) => {
     if (updateData?.id) {
       result = await updateCate({
         ...updateData,
-        id: String(updateData.id),
         cate_name: vals.cate_name,
       });
     } else {
@@ -69,9 +68,7 @@ const CateList = (Props) => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        const result = await deleteCate({
-          id: String(vals.id),
-        });
+        const result = await deleteCate(vals);
         if (result.data.affectedRows) {
           message.success('删除成功');
           getList();
@@ -164,7 +161,22 @@ const CateList = (Props) => {
             + 新建主题
           </Button>
         </Card>
-        <Table dataSource={cate.cateList} columns={columns} />
+        <Table
+          dataSource={cate.cateList}
+          columns={columns}
+          pagination={{
+            pageSize: 10,
+            total: cate.total,
+            showQuickJumper: true,
+            onChange: (page) => {
+              setPage(page);
+            },
+            current: page,
+            showTotal: (total) => {
+              return `共${total}条数据`;
+            },
+          }}
+        />
       </PageHeaderWrapper>
     </div>
   );
