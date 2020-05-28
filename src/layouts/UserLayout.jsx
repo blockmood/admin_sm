@@ -42,12 +42,6 @@ const UserLayout = (props) => {
           </div>
           {children}
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <img src={require('../assets/ypy_logo2.png')} style={{ width: 80, height: 40 }} />
-          <a target="_blank" href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral">
-            又拍云
-          </a>
-        </div>
       </div>
     </HelmetProvider>
   );
