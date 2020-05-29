@@ -3,6 +3,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Table, Button, Modal, Form, Input, message } from 'antd';
 import { connect } from 'dva';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import { createCate, updateCate, deleteCate } from './service';
 
 const layout = {
@@ -91,12 +92,15 @@ const CateList = (Props) => {
     {
       title: '新建时间',
       dataIndex: 'create_time',
+      render: (_) => {
+        return moment(Number(_)).format('YYYY-MM-DD');
+      },
     },
     {
       title: '更新时间',
       dataIndex: 'update_time',
       render: (_) => {
-        return _ || '无';
+        return moment(Number(_)).format('YYYY-MM-DD') || '无';
       },
     },
     {
@@ -156,6 +160,7 @@ const CateList = (Props) => {
             type="primary"
             onClick={() => {
               setVisible(true);
+              form.resetFields();
             }}
           >
             + 新建主题
@@ -164,6 +169,7 @@ const CateList = (Props) => {
         <Table
           dataSource={cate.cateList}
           columns={columns}
+          rowKey="id"
           pagination={{
             pageSize: 10,
             total: cate.total,

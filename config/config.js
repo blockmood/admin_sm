@@ -15,7 +15,7 @@ export default defineConfig({
     default: 'zh-CN',
     // default true, when it is true, will use `navigator.language` overwrite default
     antd: false,
-    baseNavigator: true,
+    baseNavigator: false,
   },
   dynamicImport: {
     loading: '@/components/PageLoading/index',
@@ -52,6 +52,11 @@ export default defineConfig({
               name: '主题管理',
               path: '/catelist',
               component: './CateList',
+            },
+            {
+              name: '新闻管理',
+              path: '/news',
+              component: './News',
             },
             {
               component: './404',
