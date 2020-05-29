@@ -30,6 +30,19 @@ const News = (props) => {
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
 
+  const {
+    dispatch,
+    mapStateProps: { cate },
+  } = props;
+
+  const options = ['是', '否'];
+  const hots = ['是', '否'];
+
+  form.setFieldsValue({
+    is_recommend: '否',
+    is_hot: '否',
+  });
+
   const columns = [
     {
       title: 'Id',
@@ -63,6 +76,13 @@ const News = (props) => {
       },
     },
     {
+      title: '热门',
+      dataIndex: 'is_hot',
+      render: (_) => {
+        return <div>{_ ? '是' : '否'}</div>;
+      },
+    },
+    {
       title: '编辑',
       render: (_) => {
         return (
@@ -77,7 +97,11 @@ const News = (props) => {
                 setUpdateData(_);
                 setContent(_.content);
                 setVisible(true);
-                form.setFieldsValue(_);
+                form.setFieldsValue({
+                  ..._,
+                  is_recommend: _.is_recommend == 1 ? '是' : '否',
+                  is_hot: _.is_hot == 1 ? '是' : '否',
+                });
               }}
               style={{ fontSize: 20, marginRight: 10 }}
             />
@@ -92,17 +116,6 @@ const News = (props) => {
       },
     },
   ];
-
-  const {
-    dispatch,
-    mapStateProps: { cate },
-  } = props;
-
-  const options = ['推荐', '不推荐'];
-
-  form.setFieldsValue({
-    is_recommend: '不推荐',
-  });
 
   useEffect(() => {
     if (!cate.cateList.length) {
@@ -152,14 +165,16 @@ const News = (props) => {
       result = await updateNews({
         ...updateData,
         cate_id: cateId,
-        is_recommend: e.is_recommend == '推荐' ? 1 : 0,
+        is_recommend: e.is_recommend == '是' ? 1 : 0,
+        is_hot: e.is_hot == '是' ? 1 : 0,
         cover_img: e.cover_img,
         content,
       });
     } else {
       result = await createNews({
         ...e,
-        is_recommend: e.is_recommend == '推荐' ? 1 : 0,
+        is_recommend: e.is_recommend == '是' ? 1 : 0,
+        is_hot: e.is_hot == '是' ? 1 : 0,
         content,
       });
     }
@@ -240,6 +255,21 @@ const News = (props) => {
             >
               <Radio.Group>
                 {options.map((item, index) => {
+                  return (
+                    <Radio key={index} value={item}>
+                      {item}
+                    </Radio>
+                  );
+                })}
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              label="热门"
+              name="is_hot"
+              rules={[{ required: true, message: '请选择选项' }]}
+            >
+              <Radio.Group>
+                {hots.map((item, index) => {
                   return (
                     <Radio key={index} value={item}>
                       {item}
