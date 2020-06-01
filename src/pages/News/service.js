@@ -27,3 +27,10 @@ export async function deleteNews(params) {
     data: params,
   });
 }
+
+export async function uploadToken(params) {
+  return request(`/api/v1/upload`, {
+    method: 'POST',
+    data: params,
+  });
+}

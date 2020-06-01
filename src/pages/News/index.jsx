@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { getNewsList, createNews, updateNews, deleteNews } from './service';
+import { getNewsList, createNews, updateNews, deleteNews, uploadToken } from './service';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -20,6 +20,10 @@ const wrapperLayout = {
   wrapperCol: { span: 21 },
 };
 
+const uploadLayout = {
+  wrapperCol: { offset: 3 },
+};
+
 const News = (props) => {
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(false);
@@ -29,6 +33,8 @@ const News = (props) => {
   const [cateId, setCateId] = useState(0);
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
+  const [name, setName] = useState('');
+  const [token, setToken] = useState('');
 
   const {
     dispatch,
@@ -67,6 +73,13 @@ const News = (props) => {
     {
       title: '图片',
       dataIndex: 'cover_img',
+      render: (_) => {
+        return (
+          <a href={_} target="_blank">
+            <img src={_} style={{ width: 50 }} />
+          </a>
+        );
+      },
     },
     {
       title: '是否推荐',
@@ -131,6 +144,10 @@ const News = (props) => {
     fetchNewsList();
   }, [page]);
 
+  useEffect(() => {
+    fetchToken();
+  }, []);
+
   const fetchNewsList = async () => {
     const result = await getNewsList({
       page,
@@ -138,6 +155,11 @@ const News = (props) => {
     });
     setTotal(result.total);
     setData(result.data);
+  };
+
+  const fetchToken = async () => {
+    const result = await uploadToken();
+    setToken(result.token);
   };
 
   const fetchDelete = async (vals) => {
@@ -189,6 +211,29 @@ const News = (props) => {
     }
   };
 
+  const uploadProps = {
+    name: 'file',
+    action: 'http://up-z2.qiniup.com',
+    data: {
+      fileName: name,
+      token,
+    },
+    beforeUpload: (info) => {
+      setName(info.name);
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        const imgUrl = `http://img.yswfw.cn/${info.file.response.key}`;
+        form.setFieldsValue({
+          cover_img: imgUrl,
+        });
+      }
+      if (info.file.status === 'done') {
+      } else if (info.file.status === 'error') {
+      }
+    },
+  };
+
   return (
     <div>
       <PageHeaderWrapper title={false}>
@@ -226,8 +271,13 @@ const News = (props) => {
             >
               <TextArea />
             </Form.Item>
-            <Form.Item label="缩略图" name="cover_img">
+            <Form.Item label="封面图" name="cover_img">
               <Input style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item {...uploadLayout}>
+              <Upload {...uploadProps}>
+                <Button type="primary">上传</Button>
+              </Upload>
             </Form.Item>
             <Form.Item
               label="内容"

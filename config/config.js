@@ -59,7 +59,6 @@ export default defineConfig({
               component: './News',
             },
             {
-              name: '新闻管理',
               path: '/test',
               component: './Test',
             },
