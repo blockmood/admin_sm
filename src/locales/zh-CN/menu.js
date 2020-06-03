@@ -51,4 +51,5 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
   'menu.新闻管理': '新闻管理',
   'menu.主题管理': '主题管理',
+  'menu.标签管理': '标签管理',
 };

@@ -38,7 +38,7 @@ const News = (props) => {
 
   const {
     dispatch,
-    mapStateProps: { cate },
+    mapStateProps: { cate, tag },
   } = props;
 
   const options = ['是', '否'];
@@ -57,6 +57,19 @@ const News = (props) => {
     {
       title: '主题',
       dataIndex: 'cate_name',
+    },
+    {
+      title: '标签',
+      dataIndex: 'tag_id',
+      render: (_) => {
+        let name;
+        tag.tagList.map((item) => {
+          if (item.id == _) {
+            name = item.tag_name;
+          }
+        });
+        return name;
+      },
     },
     {
       title: '标题',
@@ -141,6 +154,16 @@ const News = (props) => {
       });
     }
 
+    if (!tag.tagList.length) {
+      dispatch({
+        type: 'tag/fetchTagList',
+        payload: {
+          page,
+          pageSize: 10,
+        },
+      });
+    }
+
     fetchNewsList();
   }, [page]);
 
@@ -186,6 +209,7 @@ const News = (props) => {
     if (updateData?.id) {
       result = await updateNews({
         ...updateData,
+        tag_id: e.tag_id,
         cate_id: cateId,
         is_recommend: e.is_recommend == '是' ? 1 : 0,
         is_hot: e.is_hot == '是' ? 1 : 0,
@@ -254,6 +278,17 @@ const News = (props) => {
               <Select placeholder="请选择主题" allowClear>
                 {cate.cateList.map((item, index) => {
                   return <Option value={item.id}>{item.cate_name}</Option>;
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="标签"
+              name="tag_id"
+              rules={[{ required: true, message: '请选择标签' }]}
+            >
+              <Select placeholder="请选择标签" allowClear>
+                {tag.tagList.map((item, index) => {
+                  return <Option value={item.id}>{item.tag_name}</Option>;
                 })}
               </Select>
             </Form.Item>

@@ -54,6 +54,11 @@ export default defineConfig({
               component: './CateList',
             },
             {
+              name: '标签管理',
+              path: '/tag',
+              component: './Tag',
+            },
+            {
               name: '新闻管理',
               path: '/news',
               component: './News',
