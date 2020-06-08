@@ -87,6 +87,15 @@ const News = (props) => {
       title: '图片',
       dataIndex: 'cover_img',
       render: (_) => {
+        if (_.indexOf(',') != -1) {
+          return _.split(',').map((item) => {
+            return (
+              <a href={item} target="_blank" style={{ display: 'block', marginTop: 5 }}>
+                <img src={item} style={{ width: 50 }} />
+              </a>
+            );
+          });
+        }
         return (
           <a href={_} target="_blank">
             <img src={_} style={{ width: 50 }} />
@@ -247,9 +256,11 @@ const News = (props) => {
     },
     onChange(info) {
       if (info.file.status !== 'uploading') {
-        const imgUrl = `http://img.yswfw.cn/${info.file.response.key}`;
+        const imgUrl = info.fileList.map((item) => {
+          return `http://img.yswfw.cn/${item.response?.key}`;
+        });
         form.setFieldsValue({
-          cover_img: imgUrl,
+          cover_img: imgUrl.toString(),
         });
       }
       if (info.file.status === 'done') {
@@ -265,6 +276,7 @@ const News = (props) => {
           title="新增新闻"
           visible={visible}
           onCancel={() => {
+            form.resetFields();
             setVisible(false);
           }}
           footer={null}
@@ -310,7 +322,7 @@ const News = (props) => {
               <Input style={{ width: '100%' }} />
             </Form.Item>
             <Form.Item {...uploadLayout}>
-              <Upload {...uploadProps}>
+              <Upload {...uploadProps} multiple>
                 <Button type="primary">上传</Button>
               </Upload>
             </Form.Item>
