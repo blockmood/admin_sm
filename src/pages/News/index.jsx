@@ -35,6 +35,8 @@ const News = (props) => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [token, setToken] = useState('');
+  const [recommend, setRecommend] = useState('否');
+  const [hot, setHot] = useState('否');
 
   const {
     dispatch,
@@ -132,11 +134,8 @@ const News = (props) => {
                 setUpdateData(_);
                 setContent(_.content);
                 setVisible(true);
-                form.setFieldsValue({
-                  ..._,
-                  is_recommend: _.is_recommend == 1 ? '是' : '否',
-                  is_hot: _.is_hot == 1 ? '是' : '否',
-                });
+                setRecommend(_.is_recommend == 1 ? '是' : '否');
+                setHot(_.is_hot == 1 ? '是' : '否');
               }}
               style={{ fontSize: 20, marginRight: 10 }}
             />
@@ -220,16 +219,16 @@ const News = (props) => {
         ...updateData,
         tag_id: e.tag_id,
         cate_id: cateId,
-        is_recommend: e.is_recommend == '是' ? 1 : 0,
-        is_hot: e.is_hot == '是' ? 1 : 0,
+        is_recommend: recommend == '是' ? 1 : 0,
+        is_hot: hot == '是' ? 1 : 0,
         cover_img: e.cover_img,
         content,
       });
     } else {
       result = await createNews({
         ...e,
-        is_recommend: e.is_recommend == '是' ? 1 : 0,
-        is_hot: e.is_hot == '是' ? 1 : 0,
+        is_recommend: recommend == '是' ? 1 : 0,
+        is_hot: hot == '是' ? 1 : 0,
         content,
       });
     }
@@ -278,6 +277,7 @@ const News = (props) => {
           onCancel={() => {
             form.resetFields();
             setVisible(false);
+            setContent('');
           }}
           footer={null}
         >
@@ -345,35 +345,23 @@ const News = (props) => {
                 }}
               />
             </Form.Item>
-            <Form.Item
-              label="推荐"
-              name="is_recommend"
-              rules={[{ required: true, message: '请选择选项' }]}
-            >
-              <Radio.Group>
-                {options.map((item, index) => {
-                  return (
-                    <Radio key={index} value={item}>
-                      {item}
-                    </Radio>
-                  );
-                })}
-              </Radio.Group>
+            <Form.Item label="推荐" rules={[{ required: true, message: '请选择选项' }]}>
+              <Radio.Group
+                options={['是', '否']}
+                onChange={(e) => {
+                  setRecommend(e.target.value);
+                }}
+                value={recommend}
+              />
             </Form.Item>
-            <Form.Item
-              label="热门"
-              name="is_hot"
-              rules={[{ required: true, message: '请选择选项' }]}
-            >
-              <Radio.Group>
-                {hots.map((item, index) => {
-                  return (
-                    <Radio key={index} value={item}>
-                      {item}
-                    </Radio>
-                  );
-                })}
-              </Radio.Group>
+            <Form.Item label="热门" rules={[{ required: true, message: '请选择选项' }]}>
+              <Radio.Group
+                options={['是', '否']}
+                onChange={(e) => {
+                  setHot(e.target.value);
+                }}
+                value={hot}
+              />
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit">
