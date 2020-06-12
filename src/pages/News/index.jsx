@@ -131,6 +131,7 @@ const News = (props) => {
                     setCateId(item.id);
                   }
                 });
+                form.setFieldsValue(_);
                 setUpdateData(_);
                 setContent(_.content);
                 setVisible(true);
