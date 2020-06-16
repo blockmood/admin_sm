@@ -67,7 +67,8 @@
     "react-helmet-async": "^1.0.4",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
-    "use-merge-value": "^1.0.1"
+    "use-merge-value": "^1.0.1",
+    "wangeditor": "^3.1.1"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.18",
@@ -80,6 +81,7 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "^5.0.13",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
     "@umijs/fabric": "^2.0.5",
     "@umijs/plugin-blocks": "^2.0.5",
     "@umijs/preset-ant-design-pro": "^1.2.0",

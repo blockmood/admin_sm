@@ -1,0 +1,7 @@
+.editor {
+  margin-left: 15px;
+}
+.w-e-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+}

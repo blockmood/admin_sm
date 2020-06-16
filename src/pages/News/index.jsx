@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Table, Button, Modal, Form, Input, message, Radio, Select, Upload } from 'antd';
 import { connect } from 'dva';
+import E from 'wangeditor';
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { getNewsList, createNews, updateNews, deleteNews, uploadToken } from './service';
+
+import './index.css';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -37,6 +38,8 @@ const News = (props) => {
   const [token, setToken] = useState('');
   const [recommend, setRecommend] = useState('否');
   const [hot, setHot] = useState('否');
+
+  var editor = new E('#editor');
 
   const {
     dispatch,
@@ -133,10 +136,18 @@ const News = (props) => {
                 });
                 form.setFieldsValue(_);
                 setUpdateData(_);
-                setContent(_.content);
                 setVisible(true);
                 setRecommend(_.is_recommend == 1 ? '是' : '否');
                 setHot(_.is_hot == 1 ? '是' : '否');
+                setTimeout(() => {
+                  editor.customConfig.onchange = (html) => {
+                    setContent(html);
+                  };
+                  if (editor) {
+                    editor.create();
+                  }
+                  editor.txt.html(_.content);
+                }, 0);
               }}
               style={{ fontSize: 20, marginRight: 10 }}
             />
@@ -273,6 +284,7 @@ const News = (props) => {
     <div>
       <PageHeaderWrapper title={false}>
         <Modal
+          width={600}
           title="新增新闻"
           visible={visible}
           onCancel={() => {
@@ -290,7 +302,11 @@ const News = (props) => {
             >
               <Select placeholder="请选择主题" allowClear>
                 {cate.cateList.map((item, index) => {
-                  return <Option value={item.id}>{item.cate_name}</Option>;
+                  return (
+                    <Option value={item.id} key={item.id}>
+                      {item.cate_name}
+                    </Option>
+                  );
                 })}
               </Select>
             </Form.Item>
@@ -301,7 +317,11 @@ const News = (props) => {
             >
               <Select placeholder="请选择标签" allowClear>
                 {tag.tagList.map((item, index) => {
-                  return <Option value={item.id}>{item.tag_name}</Option>;
+                  return (
+                    <Option value={item.id} key={item.id}>
+                      {item.tag_name}
+                    </Option>
+                  );
                 })}
               </Select>
             </Form.Item>
@@ -329,22 +349,10 @@ const News = (props) => {
             </Form.Item>
             <Form.Item
               label="内容"
-              name="content"
               rules={[{ required: true, message: '请填写内容' }]}
               {...wrapperLayout}
             >
-              <CKEditor
-                editor={ClassicEditor}
-                data={content}
-                onInit={(editor) => {
-                  const data = editor.getData();
-                  setContent(data);
-                }}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  setContent(data);
-                }}
-              />
+              <div id="editor" className="editor"></div>
             </Form.Item>
             <Form.Item label="推荐" rules={[{ required: true, message: '请选择选项' }]}>
               <Radio.Group
@@ -377,6 +385,13 @@ const News = (props) => {
             onClick={() => {
               setVisible(true);
               form.resetFields();
+              setTimeout(() => {
+                editor.customConfig.onchange = (html) => {
+                  setContent(html);
+                };
+                editor.create();
+                editor.txt.html('');
+              }, 0);
             }}
           >
             + 新增新闻
