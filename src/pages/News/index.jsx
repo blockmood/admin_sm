@@ -22,7 +22,7 @@ const wrapperLayout = {
 };
 
 const uploadLayout = {
-  wrapperCol: { offset: 3 },
+  wrapperCol: { offset: 2 },
 };
 
 const News = (props) => {
@@ -287,7 +287,7 @@ const News = (props) => {
     <div>
       <PageHeaderWrapper title={false}>
         <Modal
-          width={600}
+          width={830}
           title="新增新闻"
           visible={visible}
           onCancel={() => {
@@ -343,9 +343,7 @@ const News = (props) => {
               <TextArea />
             </Form.Item>
             <Form.Item label="封面图" name="cover_img">
-              <Input style={{ width: '100%' }} />
-            </Form.Item>
-            <Form.Item {...uploadLayout}>
+              <Input style={{ width: '90%' }} />{' '}
               <Upload {...uploadProps} multiple>
                 <Button type="primary">上传</Button>
               </Upload>
