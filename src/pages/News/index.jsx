@@ -343,9 +343,14 @@ const News = (props) => {
               <TextArea />
             </Form.Item>
             <Form.Item label="封面图" name="cover_img">
-              <Input style={{ width: '90%' }} />{' '}
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item {...uploadLayout} style={{ marginLeft: '-10px' }}>
               <Upload {...uploadProps} multiple>
-                <Button type="primary">上传</Button>
+                <Button type="primary" style={{ marginRight: 10 }}>
+                  上传
+                </Button>{' '}
+                *支持各种格式
               </Upload>
             </Form.Item>
             <Form.Item
