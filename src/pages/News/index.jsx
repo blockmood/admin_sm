@@ -92,8 +92,8 @@ const News = (props) => {
       title: '图片',
       dataIndex: 'cover_img',
       render: (_) => {
-        if (_.indexOf(',') != -1) {
-          return _.split(',').map((item) => {
+        if (_?.indexOf(',') != -1) {
+          return _?.split(',').map((item) => {
             return (
               <a href={item} target="_blank" style={{ display: 'block', marginTop: 5 }}>
                 <img src={item} style={{ width: 50 }} />
@@ -250,6 +250,9 @@ const News = (props) => {
       fetchNewsList();
       setVisible(false);
       form.resetFields();
+      setUpdateData({});
+      setRecommend('否');
+      setHot('否');
     } else {
       message.error('保存失败');
     }
