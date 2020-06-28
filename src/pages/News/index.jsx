@@ -58,6 +58,8 @@ const News = (props) => {
     {
       title: 'Id',
       dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
+      defaultSortOrder: 'descend',
     },
     {
       title: '主题',
@@ -229,6 +231,7 @@ const News = (props) => {
     if (updateData?.id) {
       result = await updateNews({
         ...updateData,
+        ...e,
         tag_id: e.tag_id,
         cate_id: cateId,
         is_recommend: recommend == '是' ? 1 : 0,
@@ -391,6 +394,9 @@ const News = (props) => {
             onClick={() => {
               setVisible(true);
               form.resetFields();
+              setUpdateData({
+                id: 0,
+              });
               setTimeout(() => {
                 editor.customConfig.onchange = (html) => {
                   setContent(html);
@@ -403,7 +409,22 @@ const News = (props) => {
             + 新增新闻
           </Button>
         </Card>
-        <Table rowKey="id" dataSource={data} columns={columns} />
+        <Table
+          rowKey="id"
+          dataSource={data}
+          columns={columns}
+          pagination={{
+            pageSize: 10,
+            total: total,
+            onChange: (page) => {
+              setPage(page);
+            },
+            showQuickJumper: true,
+            showTotal: (total) => {
+              return `共${total}条数据`;
+            },
+          }}
+        />
       </PageHeaderWrapper>
     </div>
   );
