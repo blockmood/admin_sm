@@ -64,6 +64,11 @@ export default defineConfig({
               component: './News',
             },
             {
+              name: '缓存清理',
+              path: '/cache',
+              component: './Cache',
+            },
+            {
               path: '/test',
               component: './Test',
             },
