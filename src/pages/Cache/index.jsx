@@ -5,23 +5,20 @@ import { deleteCache } from './service';
 
 export default () => {
   const onFinish = async (e) => {
-    if (!e.type.trim()) {
+    if (!e.type) {
       alert('请输入清除字段');
       return;
     }
     let result = deleteCache(e);
-    if (result.status == 200) {
-      message.success('清除成功');
-    } else {
-      message.error('清除失败');
-    }
+    message.success('清除成功');
   };
   return (
     <PageHeaderWrapper title={false}>
       <Card>
+        <h1>today|tomorrow|week|nextweek|month|year</h1>
         <Form onFinish={onFinish}>
           <Form.Item name="type">
-            <Input placeholder="字段支持 today|tomorrow|week|nextweek|month|year" />
+            <Input />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

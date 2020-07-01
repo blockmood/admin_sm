@@ -141,6 +141,7 @@ const News = (props) => {
                 setVisible(true);
                 setRecommend(_.is_recommend == 1 ? '是' : '否');
                 setHot(_.is_hot == 1 ? '是' : '否');
+                setContent(_.content);
                 setTimeout(() => {
                   editor.customConfig.onchange = (html) => {
                     setContent(html);
@@ -397,6 +398,7 @@ const News = (props) => {
               setUpdateData({
                 id: 0,
               });
+              setContent('');
               setTimeout(() => {
                 editor.customConfig.onchange = (html) => {
                   setContent(html);
