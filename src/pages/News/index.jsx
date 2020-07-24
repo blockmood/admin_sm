@@ -194,10 +194,11 @@ const News = (props) => {
     fetchToken();
   }, []);
 
-  const fetchNewsList = async () => {
+  const fetchNewsList = async (params) => {
     const result = await getNewsList({
       page,
       pageSize: 10,
+      ...params,
     });
     setTotal(result.total);
     setData(result.data);
@@ -260,6 +261,10 @@ const News = (props) => {
     } else {
       message.error('保存失败');
     }
+  };
+
+  const onSearch = (e) => {
+    fetchNewsList(e);
   };
 
   const uploadProps = {
@@ -390,26 +395,41 @@ const News = (props) => {
           </Form>
         </Modal>
         <Card>
-          <Button
-            type="primary"
-            onClick={() => {
-              setVisible(true);
-              form.resetFields();
-              setUpdateData({
-                id: 0,
-              });
-              setContent('');
-              setTimeout(() => {
-                editor.customConfig.onchange = (html) => {
-                  setContent(html);
-                };
-                editor.create();
-                editor.txt.html('');
-              }, 0);
-            }}
-          >
-            + 新增新闻
-          </Button>
+          <Form onFinish={onSearch} layout="inline">
+            <Form.Item>
+              <Button
+                type="primary"
+                onClick={() => {
+                  setVisible(true);
+                  form.resetFields();
+                  setUpdateData({
+                    id: 0,
+                  });
+                  setContent('');
+                  setTimeout(() => {
+                    editor.customConfig.onchange = (html) => {
+                      setContent(html);
+                    };
+                    editor.create();
+                    editor.txt.html('');
+                  }, 0);
+                }}
+              >
+                + 新增新闻
+              </Button>
+            </Form.Item>
+            {/* <Form.Item label="标题" name="title">
+              <Input />
+            </Form.Item> */}
+            <Form.Item label="是否热门" name="is_hot">
+              <Input />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+            </Form.Item>
+          </Form>
         </Card>
         <Table
           rowKey="id"
